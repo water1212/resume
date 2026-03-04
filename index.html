@@ -1,173 +1,377 @@
-<!DOCTYPE HTML>
-<!--
-	Read Only by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Lucas Combs</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="is-preload">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucas Combs</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #33ff66;
+    --green-dim: rgba(51, 255, 102, 0.12);
+    --bg: #0e0e14;
+    --white: #e8e8ec;
+    --gray: #c8c8d4;
+    --border: rgba(255,255,255,0.08);
+  }
 
-		<style>
-			canvas {
-				border: 1px solid black;
-			}
-		</style>
-		<section id="header">
-			<header>
-				<span class="image avatar"><img src="images/avatar.jpg" alt="" /></span>
-				<h1 id="logo"><a href="#">Lucas Combs</a></h1>
-        <div>Senior Software Engineer</div>
-        <div>combs.lucas@protonmail.com</div>
-        <div><a href="/assets/LucasCombs_Resume.pdf" download><i class="fas fa-download"></i> Resume - PDF </a></div>
-			</header>
-			<nav id="nav">
-				<ul>
-					<li><a href="#one" class="active">About</a></li>
-					<li><a href="#two">Technical Skills</a></li>
-					<li><a href="#three">Professional Accomplishments</a></li>
-					<li><a href="#four">Personal Projects</a></li>
-				</ul>
-			</nav>
-			<footer>
-				<ul class="icons">
-					<li><a href="https://www.linkedin.com/in/lucas-combs-6a338024/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
-					<li><a href="https://github.com/water1212" class="icon brands fa-github"><span class="label">Github</span></a></li>
-					<li><a href="mailto:combs.lucas@protonmail.com" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
-				</ul>
-			</footer>
-		</section>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-		<div id="wrapper">
-			<div id="main">
-				<section id="one">
-						<div class="image main" data-position="center">
-							<img src="images/banner.jpg" alt="" />
-						</div>
-						<div class="container">
-							<header class="major">
-								<h2>A Little Bit About Me</h2>
-								<p>Developer - Crossfitter - Financial Market Enthusiast</p>
-							</header>
-							<p>
-								Since graduating from George Mason University in 2012 with a degree in Computer Science, 
-								I've been able to work at a variety of companies in many different industries. From casino gaming,
-								to finance, I've been able to develop a very unique skillset and approach to problem solving!
-								Currently I am working on a casino gaming platform at Grover Gaming.
-							</p>
-						</div>
-				</section>
+  body {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    line-height: 1.75;
+    font-size: 16px;
+  }
 
-				<section id="two">
-					<div class="container">
-						<h3>Technical Skills</h3>
-						<p></p>
-						<ul class="feature-icons">
-							<li class="icon solid fa-code">Javascript/Typescript</li>
-							<li class="icon solid fa-code">NodeJS</li>
-							<li class="icon solid fa-code">C#</li>
-							<li class="icon solid fa-code">C/C++</li>
-							<li class="icon solid fa-code">Git</li>
-							<li class="icon solid fa-code">Bash</li>
-							<li class="icon solid fa-code">SQL</li>
-							<li class="icon solid fa-code">MongoDB</li>
-						</ul>
-					</div>
-				</section>
+  .page {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem;
+  }
 
-				<section id="three">
-					<div class="container">
-						<h3>Professional Accomplishments</h3>
-						<p>
-							While I value all of my professional projects equally, 
-							I've chosen to highlight a few that I think best showcase my skill set!
-						</p>
-						<div class="features">
-							<article>
-								<a href="#" class="image"><img src="images/pic01.jpg" alt="" /></a>
-								<div class="inner">
-									<h4>Casino Gaming</h4>
-									<p>
-										In 2 years at IGT, I developed and shipped 3 Slot Machine games: 
-										<i>
-											<i>Silk Seduction</i>, 
-											<i>Black Orchid</i>, and 
-											<i>Venture To Never Isle</i>
-										</i>
-									</p>
-                  <p>
-                    At Grover Gaming, I am working on designing, architecting and implementing a brand new gaming system
-                  </p>
-								</div>
-							</article>
-							<article>
-								<a href="#" class="image"><img src="images/pic02.jpg" alt="" /></a>
-								<div class="inner">
-									<h4>Credit and Risk Assessment</h4>
-									<p>
-										At Bristlecone Holdings, a consumer lending startup, I helped design, test, and implement a variety 
-										of risk based pricing and underwriting algorithms. I also worked to develop strategies for detecting 
-										and mitigating the impact of fradulent retailers and customers.
-									</p>
-								</div>
-							</article>
-							<article>
-								<a href="#" class="image"><img src="images/pic03.jpg" alt="" /></a>
-								<div class="inner">
-									<h4>Mobile Application Development</h4>
-									<p>
-										I took over development of a custom android application to perform industrial machine vibration analysis using Digital Signal Processing (DSP). I was tasked with finding or replacing 
-										the current charting framework to allow for more powerful analysis techniques.
-									</p>
-								</div>
-							</article>
-						</div>
-					</div>
-				</section>
+  /* === HEADER === */
+  header { margin-bottom: 2.5rem; }
 
-				<section id="four">
-					<div class="container">
-						<h3>Personal Projects</h3>
-						<p>
-							Every once in a while, I'll get the itch to learn something new, 
-							revisit something I learned, or just tinker around a bit. Here just are a few little demos I've
-							put together to show off some cool things I've learned!
-						</p>
-						<div class="features">
-              <article>
-                <div class='image' id='canvas-container'></div>
-                <div class="inner">
-									<h4>A Star Pathfinding</h4>
-									<ul>
-										<li>Click on squares to make them free or blocked to see the shortest path. (No corner traveling for this example)</li>
-									</ul>
-								</div>
-							</article>
-						</div>
-					</div>
-				</section>
-			</div>
+  .name {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--green);
+    text-shadow: 0 0 30px rgba(51,255,102,0.15);
+    letter-spacing: -1px;
+    margin-bottom: 0.4rem;
+  }
 
-			<section id="footer">
-				<div class="container">
-					<ul class="copyright">
-						<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
-				</div>
-			</section>
+  .tagline {
+    font-size: 1rem;
+    color: var(--gray);
+    font-weight: 400;
+  }
 
-		</div>
+  .contact-row {
+    margin-top: 1.2rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
 
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/jquery.scrollex.min.js"></script>
-		<script src="assets/js/jquery.scrolly.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/driver.js"></script>
-	</body>
-</html>
+  .contact-row a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+  }
+
+  .contact-row a:hover { color: var(--green); }
+
+  .separator {
+    color: var(--gray);
+    font-size: 0.85rem;
+  }
+
+  .green-link {
+    color: var(--green) !important;
+  }
+
+  .contact-row .resume-link {
+    color: var(--green);
+  }
+
+  .resume-btn {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 0.6rem 1.4rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--green);
+    text-decoration: none;
+    border-radius: 3px;
+    transition: opacity 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .resume-btn:hover { opacity: 0.8; }
+
+  /* === DIVIDER === */
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* === SECTIONS === */
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+  }
+
+  /* === XP === */
+  .xp-item { margin-bottom: 1.8rem; }
+  .xp-item:last-child { margin-bottom: 0; }
+
+  .xp-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .xp-company {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .xp-date {
+    font-size: 0.85rem;
+    color: var(--gray);
+  }
+
+  .xp-role {
+    font-size: 0.9rem;
+    color: var(--green);
+    font-weight: 500;
+    margin: 0.15rem 0 0.35rem;
+  }
+
+  .xp-desc {
+    font-size: 0.9rem;
+    color: var(--gray);
+    line-height: 1.8;
+  }
+
+  .xp-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .xp-list li {
+    font-size: 0.9rem;
+    color: var(--gray);
+    line-height: 1.8;
+    padding-left: 1.2rem;
+    position: relative;
+  }
+
+  .xp-list li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+  }
+
+  /* === SKILLS === */
+  .skill-group { margin-bottom: 1.2rem; }
+  .skill-group:last-child { margin-bottom: 0; }
+
+  .skill-cat {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .skill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+  .chip {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--border);
+    color: var(--gray);
+    color: var(--white);
+    border-radius: 2px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .chip:hover {
+    color: var(--green);
+    border-color: var(--green);
+    background: var(--green-dim);
+  }
+
+  /* === PROJECTS === */
+  .project-item { margin-bottom: 1.5rem; }
+
+  .project-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.8rem;
+  }
+
+  .project-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .project-link {
+    font-size: 0.85rem;
+    color: var(--green);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .project-link:hover { opacity: 0.7; }
+
+  .project-preview {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    background: #000;
+  }
+
+  .project-preview iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* === FOOTER === */
+  footer {
+    margin-top: 2.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--gray);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 500px) {
+    .page { padding: 2rem 1.2rem; }
+    .name { font-size: 1.8rem; }
+    .contact-row { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <div class="name">Lucas Combs</div>
+    <div class="tagline">Lead Software Engineer · Real-time Regulated Gaming Systems</div>
+    <div class="contact-row">
+      <a href="mailto:combs.lucas@protonmail.com">combs.lucas@protonmail.com</a>
+      <span class="separator">|</span>
+      <a href="https://www.linkedin.com/in/lucas-combs-6a338024/" target="_blank" class="green-link">LinkedIn →</a>
+    </div>
+    <a href="LucasCombsResume.pdf" download class="resume-btn">↓ Download Resume</a>
+  </header>
+
+  <hr>
+
+  <div class="section-label">Experience</div>
+
+  <div class="xp-item">
+    <div class="xp-top">
+      <span class="xp-company">DraftKings</span>
+      <span class="xp-date">2022 – 2026</span>
+    </div>
+    <div class="xp-role">Lead Software Engineer</div>
+    <ul class="xp-list">
+      <li>Led 4 engineers on Game Platform team</li>
+      <li>Owned GDK architecture across Unity & JS/Three.js engine</li>
+      <li>Built SDK libraries powering 80+ regulated casino titles</li>
+    </ul>
+  </div>
+
+  <div class="xp-item">
+    <div class="xp-top">
+      <span class="xp-company">Grover Gaming</span>
+      <span class="xp-date">2020 – 2022</span>
+    </div>
+    <div class="xp-role">Lead Software Engineer</div>
+    <ul class="xp-list">
+      <li>Architected greenfield gaming system certified by regulators</li>
+      <li>Microservices + WebSockets for real-time terminal communication</li>
+      <li>Docker & Azure CI/CD workflow</li>
+    </ul>
+  </div>
+
+  <div class="xp-item">
+    <div class="xp-top">
+      <span class="xp-company">Baker Hughes</span>
+      <span class="xp-date">2018 – 2020</span>
+    </div>
+    <div class="xp-role">Lead Software Engineer</div>
+    <ul class="xp-list">
+      <li>Full-stack industrial IoT — C++ server, Angular frontend</li>
+      <li>Vibration analysis via Digital Signal Processing</li>
+      <li>Improved device battery life by 30%</li>
+    </ul>
+  </div>
+
+  <div class="xp-item">
+    <div class="xp-top">
+      <span class="xp-company">VeriSign | Bristlecone | IGT</span>
+      <span class="xp-date">2012 – 2018</span>
+    </div>
+    <div class="xp-role">Software Engineer</div>
+    <ul class="xp-list">
+      <li>Server performance testing at VeriSign</li>
+      <li>Consumer finance platform at Bristlecone</li>
+      <li>Shipped 4 slot machine games at IGT</li>
+      <li>Built company-wide i18n tool adopted across all game dev</li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <div class="section-label">Projects</div>
+
+  <div class="project-item">
+    <div class="project-top">
+      <span class="project-name">1528.io</span>
+      <a href="https://1528.io" target="_blank" class="project-link">Visit →</a>
+    </div>
+    <div class="project-preview">
+      <iframe src="https://1528.io" title="1528.io preview" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="section-label">Skills</div>
+
+  <div class="skill-group">
+    <div class="skill-cat">Languages</div>
+    <div class="skill-list">
+      <span class="chip">JavaScript/TypeScript</span><span class="chip">Node.js</span><span class="chip">Python</span><span class="chip">C#</span><span class="chip">C/C++</span><span class="chip">Java</span><span class="chip">SQL</span><span class="chip">Bash</span>
+    </div>
+  </div>
+
+  <div class="skill-group">
+    <div class="skill-cat">Infrastructure & Cloud</div>
+    <div class="skill-list">
+      <span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">AWS</span><span class="chip">Azure</span><span class="chip">Jenkins</span><span class="chip">NGINX</span><span class="chip">Linux</span>
+    </div>
+  </div>
+
+  <div class="skill-group">
+    <div class="skill-cat">Game Dev & Real-time</div>
+    <div class="skill-list">
+      <span class="chip">Unity3D</span><span class="chip">Godot</span><span class="chip">Three.js</span><span class="chip">PhaserJS</span><span class="chip">WebSockets</span><span class="chip">SignalR</span>
+    </div>
+  </div>
+
+  <div class="skill-group">
+    <div class="skill-cat">Data & Testing</div>
+    <div class="skill-list">
+      <span class="chip">P
