@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucas Combs — Career Slots</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green: #33ff33;
+  --green-dim: #1a8c1a;
+  --green-glow: rgba(51, 255, 51, 0.4);
+  --green-dark: #0a3a0a;
+  --amber: #ffb833;
+  --red: #ff3333;
+  --bg: #0a0a0a;
+  --screen-bg: #0c1a0c;
+}
+
+body {
+  min-height: auto;
+  display: block;
+  background: var(--bg);
+  font-family: 'VT323', monospace;
+  overflow: hidden;
+  padding: 12px;
+}
+
+
+.machine {
+  position: relative;
+  width: 520px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.machine::after {
+  bottom: -20px;
+  height: 36px;
+}
+
+.monitor {
+  position: relative;
+}
+
+.screen {
+  background: var(--screen-bg);
+  border-radius: 6px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.5), inset 0 0 20px rgba(51, 255, 51, 0.03);
+}
+
+.screen::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.screen::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(rgba(51,255,51,0.02) 50%, rgba(0,0,0,0.04) 50%);
+  background-size: 100% 4px;
+  animation: flicker 0.1s infinite alternate;
+  pointer-events: none;
+  z-index: 21;
+}
+
+@keyframes flicker { 0% { opacity: 0.95; } 100% { opacity: 1; } }
+
+.screen-curve {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 6px;
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.3), inset 20px 0 40px rgba(0,0,0,0.15), inset -20px 0 40px rgba(0,0,0,0.15), inset 0 20px 40px rgba(0,0,0,0.15), inset 0 -20px 40px rgba(0,0,0,0.15);
+  pointer-events: none;
+  z-index: 22;
+}
+
+.reels-container {
+  display: flex; gap: 4px; height: 280px;
+  overflow: hidden; position: relative; z-index: 10;
+  border: 1px solid var(--green-dim); border-radius: 3px;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 0 8px rgba(51,255,51,0.05);
+}
+
+.payline {
+  position: absolute; top: 50%; left: 0; right: 0;
+  height: 1px; background: var(--green);
+  box-shadow: 0 0 8px var(--green-glow), 0 0 20px rgba(51,255,51,0.15);
+  transform: translateY(-0.5px); z-index: 15; pointer-events: none;
+  display: none;
+}
+
+.scramble-zone {
+  position: absolute;
+  top: calc(50% - 16px);
+  left: 0; right: 0;
+  height: 32px;
+  z-index: 16;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.scramble-zone.active { opacity: 1; }
+
+.reel {
+  flex: 1; overflow: hidden; position: relative;
+  border-right: 1px solid rgba(51,255,51,0.1);
+}
+.reel:last-child { border-right: none; }
+
+.reel-strip { position: absolute; left: 0; right: 0; will-change: transform; }
+.reel-strip.stopping { transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+
+.symbol-cell {
+  height: var(--cell-h, 93.33px);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; padding: 4px 0; position: relative;
+  text-align: center;
+}
+
+.symbol-cell::after {
+  content: ''; position: absolute; bottom: 0; left: 20%; right: 20%;
+  height: 1px; background: rgba(51,255,51,0.06);
+}
+
+.symbol-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+  margin-bottom: 2px;
+}
+
+.sym-img {
+  width: calc(var(--cell-h, 93.33px) * 0.65);
+  height: calc(var(--cell-h, 93.33px) * 0.65);
+  image-rendering: auto;
+  filter: drop-shadow(0 0 6px var(--green-glow));
+  display: block;
+}
+
+.symbol-label {
+  font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+  color: var(--green-dim); text-align: center; letter-spacing: 1px; text-transform: uppercase;
+}
+
+.symbol-cell.winner { animation: winFlash 0.4s ease-in-out infinite; }
+@keyframes winFlash { 0%, 100% { background: transparent; } 50% { background: rgba(51,255,51,0.15); } }
+
+/* Info bar */
+.info-bar {
+  width: 100%; min-height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px 12px; margin-top: 8px; text-align: center;
+  position: relative; z-index: 10;
+  border: 1px solid var(--green-dim); border-radius: 3px;
+  background: rgba(0,0,0,0.3);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.info-text {
+  font-family: 'VT323', monospace; font-size: 1.1rem;
+  color: var(--green); text-shadow: 0 0 8px var(--green-glow); line-height: 1.3;
+}
+
+.info-text.win { color: var(--amber); text-shadow: 0 0 10px rgba(255,184,51,0.5); }
+
+.info-text.jackpot {
+  color: var(--amber); font-size: 1.3rem;
+  animation: jackpotBlink 0.5s step-end infinite;
+}
+
+@keyframes jackpotBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* Button panel */
+.button-panel {
+  display: flex; gap: 6px; align-items: stretch;
+  margin-top: 8px; position: relative; z-index: 10;
+}
+
+.panel-box {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; border: 1px solid var(--green-dim); border-radius: 3px;
+  padding: 6px 12px; background: rgba(0,0,0,0.3); min-width: 70px;
+}
+
+.panel-box-label {
+  font-family: 'Share Tech Mono', monospace; font-size: 0.55rem;
+  color: var(--green-dim); letter-spacing: 2px; text-transform: uppercase;
+}
+
+.panel-box-value {
+  font-family: 'VT323', monospace; font-size: 1.4rem;
+  color: var(--green); text-shadow: 0 0 8px var(--green-glow);
+}
+
+.spin-btn {
+  flex: 1; border: 1px solid var(--green); border-radius: 3px;
+  font-family: 'VT323', monospace; font-size: 1.5rem;
+  letter-spacing: 4px; text-transform: uppercase; cursor: pointer;
+  background: rgba(51,255,51,0.08); color: var(--green);
+  text-shadow: 0 0 8px var(--green-glow);
+  box-shadow: 0 0 10px rgba(51,255,51,0.1), inset 0 0 10px rgba(51,255,51,0.03);
+  transition: all 0.15s ease;
+}
+
+.spin-btn:hover:not(:disabled) {
+  background: rgba(51,255,51,0.15);
+  box-shadow: 0 0 20px rgba(51,255,51,0.2), inset 0 0 15px rgba(51,255,51,0.05);
+}
+
+.spin-btn:active:not(:disabled) { background: rgba(51,255,51,0.25); transform: scale(0.98); }
+.spin-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.particles-container {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; z-index: 100; overflow: hidden;
+}
+
+.particle { position: absolute; border-radius: 50%; animation: particleFall linear forwards; }
+
+@keyframes particleFall {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(100vh) scale(0.3); }
+}
+
+.machine::after {
+  content: ''; position: absolute; bottom: -40px; left: 10%; right: 10%; height: 60px;
+  background: radial-gradient(ellipse, rgba(51,255,51,0.06) 0%, transparent 70%);
+  pointer-events: none; filter: blur(10px);
+}
+
+@media (max-width: 520px) {
+  .machine { width: 100%; }
+  .sym-img { width: 48px; height: 48px; }
+  .spin-btn { font-size: 1.2rem; }
+  .panel-box { min-width: 55px; padding: 6px 8px; }
+  .panel-box-value { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="machine">
+  <div class="monitor">
+    <div class="screen" id="crtScreen">
+      <div class="screen-curve"></div>
+
+      <div class="reels-container">
+        <div class="payline" id="payline"></div>
+        <div class="scramble-zone" id="scrambleZone"><canvas id="scrambleCanvas"></canvas></div>
+        <div class="reel"><div class="reel-strip" id="strip0"></div></div>
+        <div class="reel"><div class="reel-strip" id="strip1"></div></div>
+        <div class="reel"><div class="reel-strip" id="strip2"></div></div>
+      </div>
+
+      <div class="info-bar">
+        <div class="info-text" id="message">> READY_</div>
+      </div>
+
+      <div class="button-panel">
+        <div class="panel-box">
+          <div class="panel-box-label">Credits</div>
+          <div class="panel-box-value" id="credits">100</div>
+        </div>
+        <div class="panel-box">
+          <div class="panel-box-label">Bet</div>
+          <div class="panel-box-value" id="betDisplay">1</div>
+        </div>
+        <div class="panel-box">
+          <div class="panel-box-label">Won</div>
+          <div class="panel-box-value" id="totalWon">0</div>
+        </div>
+        <button type="button" class="spin-btn" id="spinBtn">SPIN</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="particles-container" id="particles"></div>
+
+<script>
+// ============================================
+// SYMBOLS & CONFIG
+// ============================================
+
+const SYMBOLS = [
+  { id: 'cherry', label: 'Cherry', weight: 8, payout: 5,
+    img: './assets/symbol_cherry.png' },
+  { id: 'lemon', label: 'Lemon', weight: 7, payout: 8,
+    img: './assets/symbol_lemon.png' },
+  { id: 'bell', label: 'Bell', weight: 5, payout: 15,
+    img: './assets/symbol_bell.png' },
+  { id: 'seven', label: 'Seven', weight: 2, payout: 50,
+    img: './assets/symbol_7.png' },
+];
+
+const CONFIG = {
+  baseSpinTime: 1000,
+  staggerInterval: 500,
+  cellsPerSec: 12,
+  numReels: 3,
+  visiblePerReel: 3,
+  startCredits: 100,
+  bet: 1,
+  pairPayout: 2,
+};
+
+const FACTS = [
+  "> Demo Mode_",
+];
+
+// ============================================
+// STATE
+// ============================================
+
+let credits = 100, totalWon = 0, spinning = false;
+var REEL_CONTAINER_H = 280;
+var CELL_H = REEL_CONTAINER_H / CONFIG.visiblePerReel;
+var VISIBLE = CONFIG.visiblePerReel;
+var NUM_CELLS = 20;
+let finalResults = [];
+var reelState = [];
+
+// reelState is built dynamically in initReels/rebuildMachine
+
+// ============================================
+// HELPERS
+// ============================================
+
+function buildPool() {
+  const p = [];
+  SYMBOLS.forEach(s => { for (let i = 0; i < s.weight; i++) p.push(s); });
+  return p;
+}
+
+function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+function makeCell(s) {
+  const d = document.createElement('div');
+  d.className = 'symbol-cell';
+  d.innerHTML = `<div class="symbol-icon"><img src="${s.img}" class="sym-img" alt="${s.label}"></div><div class="symbol-label">${s.label}</div>`;
+  return d;
+}
+
+function generateSymbolList(count) {
+  const p = buildPool();
+  const list = [];
+  for (let i = 0; i < count; i++) list.push(pick(p));
+  return list;
+}
+
+// ============================================
+// RENDERING
+// ============================================
+
+function renderReel(idx) {
+  var state = reelState[idx];
+  var strip = document.getElementById('strip' + idx);
+  if (!strip) return;
+  var syms = state.symbols;
+  var numSyms = syms.length;
+  var totalOffset = state.offset;
+  var cellOffset = Math.floor(totalOffset / CELL_H);
+  var subPixel = totalOffset % CELL_H;
+
+  strip.innerHTML = '';
+  for (var i = -1; i < VISIBLE + 1; i++) {
+    var symIdx = ((-cellOffset + i) % numSyms + numSyms) % numSyms;
+    strip.appendChild(makeCell(syms[symIdx]));
+  }
+
+  var y = subPixel - CELL_H;
+  strip.style.transform = 'translateY(' + y + 'px)';
+}
+
+function initReels() {
+  for (var i = 0; i < CONFIG.numReels; i++) {
+    if (!reelState[i]) reelState[i] = { symbols: [], offset: 0 };
+    reelState[i].symbols = generateSymbolList(NUM_CELLS);
+    reelState[i].offset = 0;
+    renderReel(i);
+  }
+}
+
+function rebuildMachine() {
+  // Recalculate dimensions
+  VISIBLE = CONFIG.visiblePerReel;
+  CELL_H = REEL_CONTAINER_H / VISIBLE;
+
+  // Rebuild reel HTML
+  var container = document.querySelector('.reels-container');
+  container.innerHTML = '<div class="payline" id="payline"></div><div class="scramble-zone" id="scrambleZone"><canvas id="scrambleCanvas"></canvas></div>';
+
+  reelState = [];
+  for (var i = 0; i < CONFIG.numReels; i++) {
+    reelState.push({ symbols: [], offset: 0 });
+    var reel = document.createElement('div');
+    reel.className = 'reel';
+    var strip = document.createElement('div');
+    strip.className = 'reel-strip';
+    strip.id = 'strip' + i;
+    reel.appendChild(strip);
+    container.appendChild(reel);
+  }
+
+  // Update cell height in existing symbol-cell elements via CSS variable
+  document.documentElement.style.setProperty('--cell-h', CELL_H + 'px');
+
+  // Compute durations from base + stagger
+  CONFIG.durations = [];
+  for (var i = 0; i < CONFIG.numReels; i++) {
+    CONFIG.durations.push(CONFIG.baseSpinTime + i * CONFIG.staggerInterval);
+  }
+
+  initReels();
+}
+
+function updateDisplay() {
+  document.getElementById('credits').textContent = credits;
+  document.getElementById('totalWon').textContent = totalWon;
+}
+
+function setMessage(text, cls) {
+  var el = document.getElementById('message');
+  el.textContent = text;
+  el.className = 'info-text' + (cls ? ' ' + cls : '');
+}
+
+// ============================================
+// PARTICLES
+// ============================================
+
+function spawnParticles(count) {
+  const container = document.getElementById('particles');
+  const colors = ['#33ff33', '#66ff66', '#ffb833', '#33ff33'];
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = '-10px';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.boxShadow = `0 0 4px ${p.style.background}`;
+    const sz = (2 + Math.random() * 4) + 'px';
+    p.style.width = sz; p.style.height = sz;
+    p.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    p.style.animationDelay = Math.random() * 0.8 + 's';
+    container.appendChild(p);
+    setTimeout(() => p.remove(), 4000);
+  }
+}
+
+// ============================================
+// WIN WAVEFORM (only shows during win-cycle)
+// ============================================
+
+var waveRafId = null;
+var waveActive = false;
+var waveSettled = 0;
+
+function startWinWave() {
+  var zone = document.getElementById('scrambleZone');
+  var canvas = document.getElementById('scrambleCanvas');
+  if (!zone || !canvas) return;
+
+  var rect = zone.parentElement.getBoundingClientRect();
+  canvas.width = Math.floor(rect.width);
+  canvas.height = 32;
+
+  zone.classList.add('active');
+  waveActive = true;
+  waveSettled = 0;
+
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width;
+  var h = canvas.height;
+  var centerY = h / 2;
+  var startTime = performance.now();
+
+  function drawWave(now) {
+    if (!waveActive) return;
+
+    ctx.clearRect(0, 0, w, h);
+    var elapsed = (now - startTime) / 1000;
+    var calm = Math.min(1, waveSettled);
+
+    // Wild searching that progressively settles
+    var amplitude = 10 * (1 - calm * calm) + 1;
+    var noiseAmount = 2.5 * (1 - calm);
+    var freqBase = 0.04 + (1 - calm) * 0.03;
+    var phaseSpeed = 3 + (1 - calm) * 8;
+    var glowAlpha = 0.3 + calm * 0.5;
+    var lineAlpha = 0.7 + calm * 0.3;
+    var amp2Factor = 0.4 * (1 - calm);
+
+    var jitter = noiseAmount * (Math.random() - 0.5) * 0.5;
+    amplitude += jitter;
+
+    var phase = elapsed * phaseSpeed;
+    var freq2 = freqBase * 2.3;
+    var phase2 = elapsed * 5.7;
+    var amp2 = amplitude * amp2Factor;
+
+    // Main waveform
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(51, 255, 51, ' + lineAlpha + ')';
+    ctx.lineWidth = calm > 0.95 ? 2 : 1.5;
+    ctx.shadowColor = 'rgba(51, 255, 51, ' + glowAlpha + ')';
+    ctx.shadowBlur = 6 + glowAlpha * 10;
+
+    for (var x = 0; x < w; x++) {
+      var t = x * freqBase + phase;
+      var t2 = x * freq2 + phase2;
+      var noise = noiseAmount * (Math.random() - 0.5);
+      var y = centerY + Math.sin(t) * amplitude + Math.sin(t2) * amp2 + noise;
+
+      if (Math.random() < 0.003 * (1 - calm)) {
+        y += (Math.random() - 0.5) * 15;
+      }
+
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Phosphor afterglow trail
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(51, 255, 51, ' + (0.08 + glowAlpha * 0.05) + ')';
+    ctx.lineWidth = 3;
+    ctx.shadowBlur = 0;
+    for (var x = 0; x < w; x++) {
+      var t = x * freqBase + phase - 0.3;
+      var t2 = x * freq2 + phase2 - 0.3;
+      var y = centerY + Math.sin(t) * amplitude * 0.8 + Math.sin(t2) * amp2 * 0.8;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    waveRafId = requestAnimationFrame(drawWave);
+  }
+
+  requestAnimationFrame(drawWave);
+}
+
+function stopWinWave() {
+  waveActive = false;
+  if (waveRafId) {
+    cancelAnimationFrame(waveRafId);
+    waveRafId = null;
+  }
+  var zone = document.getElementById('scrambleZone');
+  if (zone) zone.classList.remove('active');
+}
+
+// ============================================
+// STATE MACHINE
+// States: idle, start-spin, determine-win, stop-spin, win-cycle
+// ============================================
+
+var gameState = 'idle';
+
+function spin() {
+  // If we're in win-cycle, pressing spin stops the cycle and starts a new spin
+  if (gameState === 'win-cycle') {
+    returnToIdle();
+    // Fall through to start a new spin
+  }
+
+  if (gameState !== 'idle') return;
+  if (credits < CONFIG.bet) { setMessage("> ERR: NO CREDITS. REFRESH_"); return; }
+
+  // === START-SPIN ===
+  gameState = 'start-spin';
+  spinning = true;
+  credits -= CONFIG.bet;
+  updateDisplay();
+  document.getElementById('spinBtn').disabled = true;
+  setMessage('> SPINNING..._');
+  var p = buildPool();
+  var numReels = CONFIG.numReels;
+  finalResults = [];
+
+  if (isFirstSpin) {
+    // First spin always gives all 7s
+    var sevenSymbol = SYMBOLS[SYMBOLS.length - 1]; // Seven is last in array
+    for (var r = 0; r < numReels; r++) {
+      finalResults.push(sevenSymbol);
+    }
+    isFirstSpin = false;
+  } else {
+    for (var r = 0; r < numReels; r++) {
+      finalResults.push(pick(p));
+    }
+  }
+
+  // === DETERMINE-WIN (before reels stop) ===
+  gameState = 'determine-win';
+  winList = evaluateWins(finalResults);
+  winCyclePaid = false;
+
+  // === STOP-SPIN ===
+  gameState = 'stop-spin';
+
+  var pxPerMs = (CONFIG.cellsPerSec * CELL_H) / 1000;
+
+  // Compute stop times from base + stagger
+  var stopTimes = [];
+  for (var i = 0; i < numReels; i++) {
+    stopTimes[i] = CONFIG.baseSpinTime + i * CONFIG.staggerInterval;
+  }
+
+  // Pre-calculate stop offsets and place target symbols
+  var stopOffsets = [];
+  for (var i = 0; i < numReels; i++) {
+    reelState[i].symbols = generateSymbolList(NUM_CELLS);
+    reelState[i].offset = 0;
+
+    var rawDist = pxPerMs * stopTimes[i];
+    var rawCells = rawDist / CELL_H;
+    var stopCell = Math.ceil(rawCells);
+    if (stopCell < 1) stopCell = 1;
+
+    var middleRow = Math.floor(VISIBLE / 2);
+    var middleIdx = ((-stopCell + middleRow) % NUM_CELLS + NUM_CELLS) % NUM_CELLS;
+    reelState[i].symbols[middleIdx] = finalResults[i];
+
+    stopOffsets[i] = stopCell * CELL_H;
+  }
+
+  var startTime = performance.now();
+  var locked = [];
+  for (var i = 0; i < numReels; i++) locked.push(false);
+  var lastTime = startTime;
+
+  function animate(now) {
+    var dt = now - lastTime;
+    lastTime = now;
+    var elapsed = now - startTime;
+    var allDone = true;
+
+    for (var i = 0; i < numReels; i++) {
+      if (locked[i]) continue;
+
+      if (elapsed >= stopTimes[i]) {
+        // SLAM STOP
+        locked[i] = true;
+        reelState[i].offset = stopOffsets[i];
+        renderReel(i);
+
+        var allLocked = true;
+        for (var j = 0; j < numReels; j++) {
+          if (!locked[j]) { allLocked = false; break; }
+        }
+        if (allLocked) {
+          // All reels stopped — enter win-cycle
+          enterWinCycle();
+        }
+      } else {
+        allDone = false;
+        reelState[i].offset += pxPerMs * dt;
+        renderReel(i);
+      }
+    }
+
+    if (!allDone) {
+      requestAnimationFrame(animate);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+// ============================================
+// WIN EVALUATION
+// ============================================
+
+function evaluateWins(results) {
+  // Returns an array of win objects.
+  // Currently evaluates a single payline (middle row, left-to-right).
+  // IN THE FUTURE: iterate over multiple paylines and check each.
+  var wins = [];
+  var ids = results.map(function(r) { return r.id; });
+
+  // --- Payline 0: middle row, left to right ---
+  var matchCount = 1;
+  for (var i = 1; i < ids.length; i++) {
+    if (ids[i] === ids[0]) {
+      matchCount++;
+    } else {
+      break;
+    }
+  }
+
+  if (matchCount >= 2) {
+    var winAmount, winMsg, isJackpot = false;
+
+    if (matchCount === ids.length && ids.length > 2) {
+      winAmount = results[0].payout;
+      winMsg = '> JACKPOT! ALL ' + results[0].label.toUpperCase() + ' x' + winAmount + '_';
+      if (results[0].payout >= 15) isJackpot = true;
+    } else {
+      winAmount = CONFIG.pairPayout * (matchCount - 1);
+      winMsg = '> ' + matchCount + 'x ' + results[0].label.toUpperCase() + ' x' + winAmount + '_';
+    }
+
+    // Build list of reel indices that are part of this win
+    var winningReels = [];
+    for (var i = 0; i < matchCount; i++) {
+      winningReels.push(i);
+    }
+
+    wins.push({
+      payline: 0,          // which payline (for future multi-payline)
+      row: 'middle',       // which row on the reel (for future multi-line)
+      symbol: results[0],
+      matchCount: matchCount,
+      winningReels: winningReels,
+      winAmount: winAmount,
+      winMsg: winMsg,
+      isJackpot: isJackpot
+    });
+  }
+
+  // IN THE FUTURE: evaluate additional paylines here
+  // e.g. top row, bottom row, diagonals, etc.
+  // Each would push another object into wins[]
+
+  return wins;
+}
+
+// ============================================
+// WIN-CYCLE (iterates through win list)
+// ============================================
+
+var winList = [];          // array of win objects from evaluateWins
+var winCycleIndex = 0;     // which win we're currently presenting
+var winCycleTimer = null;  // timer for cycling
+var winCyclePhase = '';    // 'waveform', 'flash', 'pause'
+var totalWinAmount = 0;    // sum of all wins
+var winCyclePaid = false;  // whether we've already credited the wins
+
+function enterWinCycle() {
+  gameState = 'win-cycle';
+  // Re-enable spin button so player can skip the cycle
+  document.getElementById('spinBtn').disabled = false;
+
+  if (winList.length > 0) {
+    // Calculate total win and credit it immediately
+    totalWinAmount = 0;
+    for (var i = 0; i < winList.length; i++) {
+      totalWinAmount += winList[i].winAmount;
+    }
+
+    if (!winCyclePaid) {
+      credits += totalWinAmount;
+      totalWon += totalWinAmount;
+      updateDisplay();
+      winCyclePaid = true;
+    }
+
+    // Start cycling through wins
+    winCycleIndex = 0;
+    presentWin(winCycleIndex);
+
+  } else {
+    // No wins — show fact, return to idle
+    setTimeout(function() {
+      setMessage(pick(FACTS));
+      returnToIdle();
+    }, 400);
+  }
+}
+
+function presentWin(index) {
+  if (gameState !== 'win-cycle') return;
+  if (index >= winList.length) index = 0;
+  winCycleIndex = index;
+
+  var win = winList[index];
+
+  // Clear any previous highlights
+  clearWinPresentation();
+
+  // Phase 1: Waveform animation
+  winCyclePhase = 'waveform';
+  startWinWave();
+  setMessage(win.winMsg, win.isJackpot ? 'jackpot' : 'win');
+
+  winCycleTimer = setTimeout(function() {
+    if (gameState !== 'win-cycle') return;
+
+    // Phase 2: Stop waveform, flash winning symbols
+    winCyclePhase = 'flash';
+    stopWinWave();
+
+    highlightWinSymbols(win);
+    if (win.isJackpot) {
+      spawnParticles(40);
+    } else {
+      spawnParticles(15);
+    }
+
+    winCycleTimer = setTimeout(function() {
+      if (gameState !== 'win-cycle') return;
+
+      // Phase 3: Brief pause, then advance to next win (or loop)
+      winCyclePhase = 'pause';
+      clearWinPresentation();
+
+      winCycleTimer = setTimeout(function() {
+        if (gameState !== 'win-cycle') return;
+
+        // Advance to next win in the list, looping back to 0
+        var nextIndex = (winCycleIndex + 1) % winList.length;
+        presentWin(nextIndex);
+      }, 400);
+
+    }, 1600);
+
+  }, 1200);
+}
+
+function highlightWinSymbols(win) {
+  var middleRow = Math.floor(VISIBLE / 2);
+  var reels = win.winningReels;
+  for (var i = 0; i < reels.length; i++) {
+    var strip = document.getElementById('strip' + reels[i]);
+    if (!strip) continue;
+    var cells = strip.querySelectorAll('.symbol-cell');
+    // middleRow + 1 because renderReel renders from index -1
+    if (cells[middleRow + 1]) {
+      cells[middleRow + 1].classList.add('winner');
+    }
+  }
+}
+
+function clearWinPresentation() {
+  // Remove all winner highlights from all reels
+  var allCells = document.querySelectorAll('.symbol-cell.winner');
+  for (var i = 0; i < allCells.length; i++) {
+    allCells[i].classList.remove('winner');
+  }
+  stopWinWave();
+}
+
+function returnToIdle() {
+  gameState = 'idle';
+  spinning = false;
+
+  // Clean up win cycle state
+  if (winCycleTimer) {
+    clearTimeout(winCycleTimer);
+    winCycleTimer = null;
+  }
+  clearWinPresentation();
+  winList = [];
+  winCycleIndex = 0;
+  winCyclePaid = false;
+  totalWinAmount = 0;
+
+  document.getElementById('spinBtn').disabled = false;
+}
+
+// ============================================
+// INIT
+// ============================================
+
+var isFirstSpin = true;
+
+rebuildMachine();
+
+// Bind buttons
+document.getElementById('spinBtn').addEventListener('click', spin);
+document.getElementById('spinBtn').addEventListener('touchend', function(e) { e.preventDefault(); spin(); });
+</script>
+
+</body>
+</html>
