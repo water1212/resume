@@ -4,396 +4,209 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lucas Combs</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green: #33ff66;
-    --green-dim: rgba(51, 255, 102, 0.12);
-    --bg: #0e0e14;
-    --white: #e8e8ec;
-    --gray: #c8c8d4;
-    --border: rgba(255,255,255,0.08);
-  }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: monospace; font-size: 14px; background: #fff; color: #000; min-height: 100vh; line-height: 1.7; }
+.page { max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem; }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+header { border: 1px solid #000; padding: 1.5rem; margin-bottom: 1.5rem; }
+.name { font-size: 2rem; font-weight: 700; margin-bottom: 0.2rem; }
+.tagline { font-size: 0.9rem; color: #666; margin-bottom: 1rem; }
+.contact { font-size: 0.85rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+.contact a { color: #000; text-decoration: none; }
+.contact a:hover { text-decoration: underline; }
+.resume-btn { display: inline-block; margin-top: 1rem; padding: 0.5rem 1.2rem; font-family: monospace; font-size: 0.85rem; font-weight: 700; color: #fff; background: #000; text-decoration: none; border: 1px solid #000; }
+.resume-btn:hover { background: #fff; color: #000; }
 
-  body {
-    font-family: 'IBM Plex Mono', monospace;
-    background: var(--bg);
-    color: var(--white);
-    min-height: 100vh;
-    line-height: 1.75;
-    font-size: 16px;
-  }
+.section { border: 1px solid #000; margin-bottom: 1.5rem; }
+.section-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; padding: 0.8rem 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.section-label:hover { background: #f5f5f5; }
+.section-label .toggle { font-size: 1rem; font-weight: 400; }
+.section-body { display: none; padding: 0 1.5rem 1.5rem; border-top: 1px solid #000; }
+.section.open .section-body { display: block; padding-top: 1rem; }
 
-  .page {
-    max-width: 660px;
-    margin: 0 auto;
-    padding: 3.5rem 1.5rem;
-  }
+.strengths { font-size: 0.85rem; color: #333; line-height: 1.8; }
 
-  /* === HEADER === */
-  header { margin-bottom: 2.5rem; }
+.project-item { margin-bottom: 1rem; }
+.project-item:last-child { margin-bottom: 0; }
+.project-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.3rem; }
+.project-name { font-weight: 700; }
+.project-link { font-size: 0.85rem; color: #000; text-decoration: none; }
+.project-link:hover { text-decoration: underline; }
+.project-desc { font-size: 0.85rem; color: #333; margin-bottom: 0.8rem; }
+.project-preview { border: 1px solid #000; overflow: hidden; aspect-ratio: 3/4; }
+.project-preview iframe { width: 100%; height: 100%; border: none; display: block; }
 
-  .name {
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: var(--green);
-    text-shadow: 0 0 30px rgba(51,255,102,0.15);
-    letter-spacing: -1px;
-    margin-bottom: 0.4rem;
-  }
+.xp-item { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #ddd; }
+.xp-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.xp-top { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.3rem; }
+.xp-company { font-size: 1rem; font-weight: 700; }
+.xp-loc { font-size: 0.85rem; color: #666; }
+.xp-date { font-size: 0.85rem; color: #666; }
+.xp-role { font-size: 0.9rem; color: #666; margin: 0.1rem 0 0.4rem; }
+.xp-list { list-style: none; }
+.xp-list li { font-size: 0.85rem; color: #333; line-height: 1.8; padding-left: 1.2rem; position: relative; }
+.xp-list li::before { content: '>'; position: absolute; left: 0; }
+.xp-compact { margin-bottom: 0.8rem; }
+.xp-compact:last-child { margin-bottom: 0; }
+.xp-compact-title { font-size: 0.85rem; }
+.xp-compact-desc { font-size: 0.85rem; color: #333; padding-left: 1.2rem; }
+.addl-header { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 1px solid #000; }
 
-  .tagline {
-    font-size: 1rem;
-    color: var(--gray);
-    font-weight: 400;
-  }
+.skill-group { margin-bottom: 0.8rem; }
+.skill-group:last-child { margin-bottom: 0; }
+.skill-cat { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
+.skill-list { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.chip { font-family: monospace; font-size: 0.8rem; padding: 0.2rem 0.5rem; border: 1px solid #000; }
 
-  .contact-row {
-    margin-top: 1.2rem;
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
+.edu { font-size: 0.9rem; }
 
-  .contact-row a {
-    color: var(--gray);
-    text-decoration: none;
-    font-size: 0.85rem;
-    transition: color 0.2s;
-  }
-
-  .contact-row a:hover { color: var(--green); }
-
-  .email-text {
-    color: var(--gray);
-    font-size: 0.85rem;
-  }
-
-  .separator {
-    color: var(--gray);
-    font-size: 0.85rem;
-  }
-
-  .green-link {
-    color: var(--green) !important;
-  }
-
-  .contact-row .resume-link {
-    color: var(--green);
-  }
-
-  .resume-btn {
-    display: inline-block;
-    margin-top: 1.2rem;
-    padding: 0.6rem 1.4rem;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--bg);
-    background: var(--green);
-    text-decoration: none;
-    border-radius: 3px;
-    transition: opacity 0.2s;
-    letter-spacing: 0.5px;
-  }
-
-  .resume-btn:hover { opacity: 0.8; }
-
-  /* === DIVIDER === */
-  hr {
-    border: none;
-    height: 1px;
-    background: var(--border);
-    margin: 2.5rem 0;
-  }
-
-  /* === SECTIONS === */
-  .section-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--green);
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 1.5rem;
-  }
-
-  /* === XP === */
-  .xp-item { margin-bottom: 1.8rem; }
-  .xp-item:last-child { margin-bottom: 0; }
-
-  .xp-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .xp-company {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--white);
-  }
-
-  .xp-date {
-    font-size: 0.85rem;
-    color: var(--gray);
-  }
-
-  .xp-role {
-    font-size: 0.9rem;
-    color: var(--green);
-    font-weight: 500;
-    margin: 0.15rem 0 0.35rem;
-  }
-
-  .xp-desc {
-    font-size: 0.9rem;
-    color: var(--gray);
-    line-height: 1.8;
-  }
-
-  .xp-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .xp-list li {
-    font-size: 0.9rem;
-    color: var(--gray);
-    line-height: 1.8;
-    padding-left: 1.2rem;
-    position: relative;
-  }
-
-  .xp-list li::before {
-    content: '>';
-    position: absolute;
-    left: 0;
-    color: var(--green);
-  }
-
-  /* === SKILLS === */
-  .skill-group { margin-bottom: 1.2rem; }
-  .skill-group:last-child { margin-bottom: 0; }
-
-  .skill-cat {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 0.5rem;
-  }
-
-  .skill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-
-  .chip {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    padding: 0.3rem 0.65rem;
-    border: 1px solid var(--border);
-    color: var(--gray);
-    color: var(--white);
-    border-radius: 2px;
-    transition: all 0.2s;
-    cursor: default;
-  }
-
-  .chip:hover {
-    color: var(--green);
-    border-color: var(--green);
-    background: var(--green-dim);
-  }
-
-  /* === PROJECTS === */
-  .project-item { margin-bottom: 1.5rem; }
-
-  .project-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.8rem;
-  }
-
-  .project-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--white);
-  }
-
-  .project-link {
-    font-size: 0.85rem;
-    color: var(--green);
-    text-decoration: none;
-    transition: opacity 0.2s;
-  }
-
-  .project-link:hover { opacity: 0.7; }
-
-  .project-desc {
-    font-size: 0.9rem;
-    color: var(--gray);
-    margin-bottom: 0.8rem;
-  }
-
-.project-preview {
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-  background: #000;
-}
-
-.project-preview iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-}
-
-.project-preview.web-preview {
-  aspect-ratio: 3 / 4;
-}
-
-.project-preview.slot-preview {
-  max-width: 560px;
-  height: 470px;
-  margin: 0 auto;
-  background: #0a0a0a;
-  overflow:
-}
-
-@media (max-width: 500px) {
-  .project-preview.slot-preview {
-    height: 430px;
-  }
-}
-
-  /* === FOOTER === */
-  footer {
-    margin-top: 2.5rem;
-    padding-top: 1.2rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85rem;
-    color: var(--gray);
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
+footer { border-top: 1px solid #000; margin-top: 2rem; padding-top: 1rem; font-size: 0.8rem; color: #666; text-align: center; }
 </style>
 </head>
 <body>
-
 <div class="page">
+
   <header>
     <div class="name">Lucas Combs</div>
-    <div class="tagline">Lead Software Engineer · Real-time Regulated Gaming Systems</div>
-    <div class="contact-row">
-      <span class="email-text">combs.lucas @ protonmail.com</span>
-      <span class="separator">|</span>
-      <a href="https://www.linkedin.com/in/lucas-combs-6a338024/" target="_blank" class="green-link">LinkedIn →</a>
+    <div class="tagline">Lead Software Engineer · 14 Years · Real-time Regulated Systems</div>
+    <div class="contact">
+      <span>(804) 212-5313</span>
+      <span>combs.lucas@protonmail.com</span>
+      <a href="https://lucascombs.me">lucascombs.me</a>
+      <a href="https://www.linkedin.com/in/lucas-combs-6a338024/">LinkedIn</a>
     </div>
-    <a href="/assets/LucasCombsResume.pdf" download class="resume-btn">↓ Download Resume</a>
+    <a href="/assets/LucasCombsResume.pdf" download class="resume-btn">Download Resume</a>
   </header>
 
-  <hr>
-
-  <div class="section-label">Experience</div>
-
-  <div class="xp-item">
-    <div class="xp-top">
-      <span class="xp-company">DraftKings</span>
-      <span class="xp-date">2022 – 2026</span>
-    </div>
-    <div class="xp-role">Lead Software Engineer</div>
-    <ul class="xp-list">
-      <li>Led 4 engineers on the Game Platform team</li>
-      <li>Owned GDK architecture across Unity & JS/Three.js engine</li>
-      <li>Built SDK libraries powering 80+ regulated casino titles</li>
-      <li>Developed and maintained applications within SOX-compliant environments</li>
-      <li>Managed Kubernetes and GitOps deployments using Helm, Jenkins, Bamboo, AWS CLI, and Docker</li>
-      <li>Implemented blue/green and canary deployment strategies for zero-downtime releases</li>
-      <li>Built AI-assisted smoke testing and deployment validation tooling to reduce production risk</li>
-      <li>Architected a studio-wide NPM toolkit (Node.js, Python, Bash) enabling end-to-end build, deploy, test, and monitoring across the full game catalog</li>
-      <li>Served as escalation point for cross-team and cross-studio production failures</li>
-    </ul>
-  </div>
-
-  <div class="xp-item">
-    <div class="xp-top">
-      <span class="xp-company">Grover Gaming</span>
-      <span class="xp-date">2020 – 2022</span>
-    </div>
-    <div class="xp-role">Lead Software Engineer</div>
-    <ul class="xp-list">
-      <li>Architected greenfield gaming system certified by regulators</li>
-      <li>Microservices + WebSockets for real-time terminal communication</li>
-      <li>Docker & Azure CI/CD workflow</li>
-    </ul>
-  </div>
-
-  <div class="xp-item">
-    <div class="xp-top">
-      <span class="xp-company">Baker Hughes</span>
-      <span class="xp-date">2018 – 2020</span>
-    </div>
-    <div class="xp-role">Lead Software Engineer</div>
-    <ul class="xp-list">
-      <li>Full-stack industrial IoT — C++ server, Angular frontend</li>
-      <li>Vibration analysis via Digital Signal Processing</li>
-      <li>Improved device battery life by 30%</li>
-    </ul>
-  </div>
-
-  <div class="xp-item">
-    <div class="xp-top">
-      <span class="xp-company">VeriSign | Bristlecone | IGT</span>
-      <span class="xp-date">2012 – 2018</span>
-    </div>
-    <div class="xp-role">Software Engineer</div>
-    <ul class="xp-list">
-      <li>Server performance testing at VeriSign</li>
-      <li>Consumer finance platform at Bristlecone</li>
-      <li>Shipped 4 slot machine games at IGT</li>
-      <li>Built company-wide i18n tool adopted across all game dev</li>
-    </ul>
-  </div>
-
-  <hr>
-
-  <div class="section-label">Projects</div>
-  <div class="project-item">
-    <div class="project-top">
-      <span class="project-name">1528.io</span>
-      <a href="https://1528.io" target="_blank" class="project-link">Visit →</a>
-    </div>
-    <div class="project-desc">Real-time futures trading bot with live market data and automated execution.</div>
-    <div class="project-preview web-preview">
-      <iframe src="https://1528.io" title="1528.io preview" sandbox="allow-scripts allow-same-origin"></iframe>
+  <div class="section open">
+    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Core Strengths <span class="toggle">−</span></div>
+    <div class="section-body">
+      <div class="strengths">Software Architecture · CI/CD · Release Engineering · DevOps · Cloud Infrastructure · Infrastructure as Code · Developer Tooling · Observability & Monitoring · Build & Deployment Automation · Technical Leadership · Distributed Systems · Real-Time Systems · Regulatory Compliance · Cross-Functional Collaboration</div>
     </div>
   </div>
 
-  <hr>
-
-  <div class="section-label">Skills</div>
-
-  <div class="skill-group">
-    <div class="skill-cat">Languages</div>
-    <div class="skill-list">
-      <span class="chip">JavaScript/TypeScript</span><span class="chip">Node.js</span><span class="chip">Python</span><span class="chip">C#</span><span class="chip">C/C++</span><span class="chip">Java</span><span class="chip">SQL</span><span class="chip">Bash</span>
+  <div class="section open">
+    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Projects <span class="toggle">−</span></div>
+    <div class="section-body">
+      <div class="project-item">
+        <div class="project-top">
+          <span class="project-name">1528.io</span>
+          <a href="https://1528.io" target="_blank" class="project-link">Visit</a>
+        </div>
+        <div class="project-desc">Real-time futures trading bot with live market data and automated execution</div>
+        <div class="project-preview">
+          <iframe src="https://1528.io" title="1528.io preview" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="skill-group">
-    <div class="skill-cat">Infrastructure & Cloud</div>
-    <div class="skill-list">
-      <span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">AWS</span><span class="chip">Azure</span><span class="chip">Jenkins</span><span class="chip">NGINX</span><span class="chip">Linux</span>
+  <div class="section">
+    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Experience <span class="toggle">+</span></div>
+    <div class="section-body">
+      <div class="xp-item">
+        <div class="xp-top">
+          <span class="xp-company">DraftKings <span class="xp-loc">(Remote)</span></span>
+          <span class="xp-date">Sep 2022 – Mar 2026</span>
+        </div>
+        <div class="xp-role">Lead Software Engineer</div>
+        <ul class="xp-list">
+          <li>Led 4 engineers on the Game Platform team, overseeing GDK architecture, CI/CD pipelines, deployment strategies, and post-launch observability</li>
+          <li>Introduced infrastructure as code and configuration as code using GitOps, Terraform, ECS, and Kubernetes</li>
+          <li>Designed reusable SDK libraries to standardize gameplay, analytics, and promotions across 80+ regulated casino titles in multiple jurisdictions</li>
+          <li>Built internal tooling to support SDLC workflows, deployment analysis, and audit traceability across distributed teams and external partners</li>
+          <li>Implemented AI-assisted smoke testing and release validation tooling to detect issues and improve deployment reliability</li>
+        </ul>
+      </div>
+      <div class="xp-item">
+        <div class="xp-top">
+          <span class="xp-company">Grover Gaming <span class="xp-loc">(Greenville, NC)</span></span>
+          <span class="xp-date">Dec 2020 – Sep 2022</span>
+        </div>
+        <div class="xp-role">Lead Software Engineer</div>
+        <ul class="xp-list">
+          <li>Led 5 engineers (remote and on-site), responsible for code reviews, developer feedback, work planning, and priority management</li>
+          <li>Architected microservice-based system using WebSockets for real-time communication between game terminals, hardware peripherals, Unity, backend servers, SQLite, and PostgreSQL</li>
+          <li>Implemented CI/CD workflows using Docker, GitHub Actions, and Jenkins for in-office hardware and Azure cloud deployments</li>
+          <li>Developed virtual hardware simulators enabling remote engineers to build and test hardware-integrated features</li>
+        </ul>
+      </div>
+      <div class="xp-item">
+        <div class="xp-top">
+          <span class="xp-company">Baker Hughes <span class="xp-loc">(Minden, NV)</span></span>
+          <span class="xp-date">Nov 2018 – Dec 2020</span>
+        </div>
+        <div class="xp-role">Lead Software Engineer</div>
+        <ul class="xp-list">
+          <li>Full-stack Android web app with C++ server, Angular JS frontend, and SQLite for industrial machine vibration analysis using Digital Signal Processing</li>
+          <li>Implemented charting framework using HTML5 Canvas and Three.js, improving application performance and battery life by 30%</li>
+        </ul>
+      </div>
+      <div class="xp-item">
+        <div class="addl-header">Additional Experience <span class="xp-date">May 2012 – Nov 2018</span></div>
+        <div class="xp-compact">
+          <div class="xp-compact-title"><strong>VeriSign</strong> — Software Engineer III</div>
+          <div class="xp-compact-desc">Performance testing engineer for large-scale DNS infrastructure and routing systems</div>
+        </div>
+        <div class="xp-compact">
+          <div class="xp-compact-title"><strong>Bristlecone Holdings</strong> — Software Engineer</div>
+          <div class="xp-compact-desc">Full-stack engineer for consumer lending platform</div>
+        </div>
+        <div class="xp-compact">
+          <div class="xp-compact-title"><strong>International Game Technology</strong> — Software Engineer</div>
+          <div class="xp-compact-desc">Developed and shipped 4 regulated slot machine titles</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="skill-group">
-    <div class="skill-cat">Game Dev & Real-time</div>
-    <div class="skill-list">
-      <span class="chip">Unity3D</span><span class="chip">Godo
+  <div class="section">
+    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Skills <span class="toggle">+</span></div>
+    <div class="section-body">
+      <div class="skill-group">
+        <div class="skill-cat">Cloud & Infrastructure</div>
+        <div class="skill-list">
+          <span class="chip">AWS</span><span class="chip">ECS/EKS</span><span class="chip">Kubernetes</span><span class="chip">Terraform</span><span class="chip">Docker</span><span class="chip">Linux</span><span class="chip">NGINX</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-cat">CI/CD & Tooling</div>
+        <div class="skill-list">
+          <span class="chip">GitHub Actions</span><span class="chip">Bamboo</span><span class="chip">Jenkins</span><span class="chip">Datadog</span><span class="chip">CloudWatch</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-cat">Languages</div>
+        <div class="skill-list">
+          <span class="chip">JavaScript</span><span class="chip">Node.js</span><span class="chip">C#</span><span class="chip">Bash</span><span class="chip">Python</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-cat">Game Dev & Real-time</div>
+        <div class="skill-list">
+          <span class="chip">Unity</span><span class="chip">Godot</span><span class="chip">Phaser</span><span class="chip">Three.js</span><span class="chip">WebSockets</span><span class="chip">Socket.IO</span><span class="chip">SignalR</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Education <span class="toggle">+</span></div>
+    <div class="section-body">
+      <div class="edu"><strong>B.S. Computer Science</strong> — George Mason University (Fairfax, VA) — May 2012</div>
+    </div>
+  </div>
+
+  <footer>Lucas Combs · 2026</footer>
+</div>
+<script>
+document.querySelectorAll('.section-label').forEach(function(el) {
+  el.addEventListener('click', function() {
+    var t = this.querySelector('.toggle');
+    t.textContent = this.parentElement.classList.contains('open') ? '−' : '+';
+  });
+});
+</script>
+</body>
+</html>
