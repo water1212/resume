@@ -7,7 +7,11 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: monospace; font-size: 14px; background: #fff; color: #000; min-height: 100vh; line-height: 1.7; }
-.page { max-width: 700px; width: 90%; margin: 0 auto; padding: 2rem 0; }
+.page { max-width: 1100px; width: 90%; margin: 0 auto; padding: 2rem 0; }
+/* .layout { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: start; } */
+.layout { display: grid; grid-template-columns: 1fr 450px; gap: 1.5rem; align-items: start; }
+.col-main { min-width: 0; }
+.col-side { min-width: 0; position: sticky; top: 2rem; }
 
 header { border: 1px solid #000; padding: 1.5rem; margin-bottom: 1.5rem; display: flex; gap: 1.5rem; align-items: flex-start; }
 .photo { width: 100px; height: 100px; border: 1px solid #000; flex-shrink: 0; object-fit: cover; }
@@ -22,6 +26,10 @@ header { border: 1px solid #000; padding: 1.5rem; margin-bottom: 1.5rem; display
   .name { font-size: 1.5rem; }
   .section-label { font-size: 0.75rem; letter-spacing: 2px; }
 }
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  .col-side { position: static; order: -1; }
+}
 .contact a { color: #000; text-decoration: none; }
 .contact a:hover { text-decoration: underline; }
 .resume-btn { display: inline-block; margin-top: 1rem; padding: 0.5rem 1.2rem; font-family: monospace; font-size: 0.85rem; font-weight: 700; color: #fff; background: #000; text-decoration: none; border: 1px solid #000; }
@@ -34,7 +42,11 @@ header { border: 1px solid #000; padding: 1.5rem; margin-bottom: 1.5rem; display
 .section-body { display: none; padding: 0 1.5rem 1.5rem; border-top: 1px solid #000; }
 .section.open .section-body { display: block; padding-top: 1rem; }
 
-.strengths { font-size: 0.85rem; color: #333; line-height: 1.8; }
+.strengths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.3rem;
+}
 
 .project-item { margin-bottom: 1rem; }
 .project-item:last-child { margin-bottom: 0; }
@@ -43,7 +55,8 @@ header { border: 1px solid #000; padding: 1.5rem; margin-bottom: 1.5rem; display
 .project-link { font-size: 0.85rem; color: #000; text-decoration: none; }
 .project-link:hover { text-decoration: underline; }
 .project-desc { font-size: 0.85rem; color: #333; margin-bottom: 0.8rem; }
-.project-preview { border: 1px solid #000; overflow: hidden; aspect-ratio: 3/4; }
+.project-preview { border: 1px solid #000; overflow: hidden; }
+.project-preview-34 { aspect-ratio: 3/4; }
 .project-preview iframe { width: 100%; height: 100%; border: none; display: block; }
 
 .xp-item { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #ddd; }
@@ -60,7 +73,8 @@ header { border: 1px solid #000; padding: 1.5rem; margin-bottom: 1.5rem; display
 .xp-compact:last-child { margin-bottom: 0; }
 .xp-compact-title { font-size: 0.85rem; }
 .xp-compact-desc { font-size: 0.85rem; color: #333; padding-left: 1.2rem; }
-.addl-header { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 1px solid #000; }
+.addl-header { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 1px solid #000; display: flex; justify-content: space-between; align-items: baseline; }
+.addl-header .xp-date { font-weight: 400; font-size: 0.85rem; text-transform: none; letter-spacing: 0; }
 
 .skill-group { margin-bottom: 0.8rem; }
 .skill-group:last-child { margin-bottom: 0; }
@@ -92,35 +106,24 @@ footer { border-top: 1px solid #000; margin-top: 2rem; padding-top: 1rem; font-s
   </header>
 
   <div class="section open">
-    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Core Strengths <span class="toggle">−</span></div>
+    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Core Strengths <span class="toggle">-</span></div>
     <div class="section-body">
-      <div class="strengths">Software Architecture · CI/CD · Release Engineering · DevOps · Cloud Infrastructure · Infrastructure as Code · Developer Tooling · Observability & Monitoring · Build & Deployment Automation · Technical Leadership · Distributed Systems · Real-Time Systems · Regulatory Compliance · Cross-Functional Collaboration</div>
-    </div>
-  </div>
-
-  <div class="section open">
-    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Projects <span class="toggle">−</span></div>
-    <div class="section-body">
-      <div class="project-item">
-        <div class="project-top">
-          <span class="project-name">1528.io</span>
-          <a href="https://1528.io" target="_blank" class="project-link">Visit</a>
-        </div>
-        <div class="project-desc">Real-time futures trading bot with live market data and automated execution</div>
-        <div class="project-preview">
-          <iframe src="https://1528.io" title="1528.io preview" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
-        </div>
+      <div class="strengths-grid">
+        <span class="chip">Software Architecture</span><span class="chip">CI/CD</span><span class="chip">Release Engineering</span><span class="chip">DevOps</span><span class="chip">Cloud Infrastructure</span><span class="chip">Infrastructure as Code</span><span class="chip">Developer Tooling</span><span class="chip">Observability & Monitoring</span><span class="chip">Build & Deployment Automation</span><span class="chip">Technical Leadership</span><span class="chip">Distributed Systems</span><span class="chip">Real-Time Systems</span><span class="chip">Regulatory Compliance</span><span class="chip">Cross-Functional Collaboration</span>
       </div>
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Experience <span class="toggle">+</span></div>
+  <div class="layout">
+    <div class="col-main">
+
+  <div class="section open">
+    <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Experience <span class="toggle">-</span></div>
     <div class="section-body">
       <div class="xp-item">
         <div class="xp-top">
           <span class="xp-company">DraftKings <span class="xp-loc">(Remote)</span></span>
-          <span class="xp-date">Sep 2022 – Mar 2026</span>
+          <span class="xp-date">Sep 2022 - Mar 2026</span>
         </div>
         <div class="xp-role">Lead Software Engineer</div>
         <ul class="xp-list">
@@ -134,7 +137,7 @@ footer { border-top: 1px solid #000; margin-top: 2rem; padding-top: 1rem; font-s
       <div class="xp-item">
         <div class="xp-top">
           <span class="xp-company">Grover Gaming <span class="xp-loc">(Greenville, NC)</span></span>
-          <span class="xp-date">Dec 2020 – Sep 2022</span>
+          <span class="xp-date">Dec 2020 - Sep 2022</span>
         </div>
         <div class="xp-role">Lead Software Engineer</div>
         <ul class="xp-list">
@@ -147,7 +150,7 @@ footer { border-top: 1px solid #000; margin-top: 2rem; padding-top: 1rem; font-s
       <div class="xp-item">
         <div class="xp-top">
           <span class="xp-company">Baker Hughes <span class="xp-loc">(Minden, NV)</span></span>
-          <span class="xp-date">Nov 2018 – Dec 2020</span>
+          <span class="xp-date">Nov 2018 - Dec 2020</span>
         </div>
         <div class="xp-role">Lead Software Engineer</div>
         <ul class="xp-list">
@@ -156,7 +159,7 @@ footer { border-top: 1px solid #000; margin-top: 2rem; padding-top: 1rem; font-s
         </ul>
       </div>
       <div class="xp-item">
-        <div class="addl-header">Additional Experience <span class="xp-date">May 2012 – Nov 2018</span></div>
+        <div class="addl-header">Additional Experience <span class="xp-date">May 2012 - Nov 2018</span></div>
         <div class="xp-compact">
           <div class="xp-compact-title"><strong>VeriSign</strong> — Software Engineer III</div>
           <div class="xp-compact-desc">Performance testing engineer for large-scale DNS infrastructure and routing systems</div>
@@ -210,13 +213,45 @@ footer { border-top: 1px solid #000; margin-top: 2rem; padding-top: 1rem; font-s
     </div>
   </div>
 
+    </div><!-- .col-main -->
+
+    <div class="col-side">
+      <div class="section open">
+        <div class="section-label" onclick="this.parentElement.classList.toggle('open')">Projects <span class="toggle">-</span></div>
+        <div class="section-body">
+          <div class="project-item">
+            <div class="project-top">
+              <span class="project-name">1528.io</span>
+              <a href="https://1528.io" target="_blank" class="project-link">Visit</a>
+            </div>
+            <div class="project-desc">Real-time futures trading bot with live market data and automated execution</div>
+            <div class="project-preview project-preview-34">
+              <iframe src="https://1528.io" title="1528.io preview" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
+            </div>
+          </div>
+          <hr>
+          <div class="project-item">
+          <div class="project-top">
+            <span class="project-name">CRT Slot</span>
+          </div>
+          <div class="project-desc">Three.js slot machine prototype with CRT shader effects</div>
+          <div class="project-preview">
+            <img src="/demos/crt-slot.GIF" alt="CRT Slot demo" style="width:100%; display:block;">
+          </div>
+        </div>
+        </div>
+      </div>
+    </div><!-- .col-side -->
+
+  </div><!-- .layout -->
+
   <footer>Lucas Combs · 2026</footer>
 </div>
 <script>
 document.querySelectorAll('.section-label').forEach(function(el) {
   el.addEventListener('click', function() {
     var t = this.querySelector('.toggle');
-    t.textContent = this.parentElement.classList.contains('open') ? '−' : '+';
+    t.textContent = this.parentElement.classList.contains('open') ? '-' : '+';
   });
 });
 </script>
